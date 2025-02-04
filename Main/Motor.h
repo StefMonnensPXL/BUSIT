@@ -8,7 +8,7 @@ class Motor {
 public:
     Motor(int pwmPin, int dirPin, int minSpeed, int maxSpeed);
     void begin();
-    void setSpeed(int speed);
+    int setSpeed(int speed);
     void update();
 
 private:

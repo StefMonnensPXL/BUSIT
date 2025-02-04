@@ -18,20 +18,24 @@
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  Serial3.begin(9600);
   while (!Serial) { ; } 
   motor.begin();
   steering.begin();
   Serial.setTimeout(10);
+  Serial3.setTimeout(10);
+  
   lastAction = millis();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (Serial.available() > 0) {
-    if(millis() - lastAction > 200){
+  if (Serial3.available() > 0) {
+    if(millis() - lastAction > 500){
       reset();
     }
-    String serialInput = Serial.readString();
+    String serialInput = Serial3.readString();
+    
     parseInput(serialInput);
     
   }else{
@@ -39,8 +43,8 @@ void loop() {
   }
 }
 void reset(){
-  motor.setSpeed(0);
-  steering.update(0);
+  //motor.setSpeed(0);
+  //steering.update(0);
 }
 
 void parseInput(String input) {
@@ -67,16 +71,17 @@ void handlePair(String pair) {
 
         // Controleer de eerste letter en handel de waarde af
         if (key == "M") {
-            motor.setSpeed(intValue);
+            Serial.println(motor.setSpeed(intValue));
             lastAction = millis();
-        } else if (key == "S") {
+        } else if (key == "R") {
             steering.update(intValue);
             lastAction = millis();
         } else if (key == "B") {
-            int B = intValue;
-            Serial.print("B is ingesteld op: ");
-            Serial.println(B);
-            lastAction = millis();
+            if(intValue = 1){
+              //motor.setSpeed(0);
+              lastAction = millis();
+              Serial.println(intValue);
+            }
         } else {
             Serial.print("Ongeldige sleutel: ");
             Serial.println(key);
