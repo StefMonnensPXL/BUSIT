@@ -1,6 +1,6 @@
 // ServoController.cpp
 #include "Steering.h"
-#include <Servo.h>
+
 
 Steering::Steering(int pin, int min, int standard, int max)
     : _pin(pin), _min(min), _standard(standard), _max(max) {}
@@ -12,7 +12,7 @@ void Steering::begin() {
 }
 
 int Steering::update(int angle) {
-    if (angle > 0) {
+    angle = convertAngle(angle);
         if (angle > _max) {
             angle = _max;
         }
@@ -21,6 +21,14 @@ int Steering::update(int angle) {
         }
         _servo.write(angle);
         return(angle);
+}
+
+int Steering::convertAngle(int angle) { 
+    if (angle < 0) {
+        return _standard + angle;
+    } else if (angle > 0) {
+        return _standard + static_cast<int>((static_cast<double>(angle) / 40.0) * (_max - _standard));
     }
+    return _standard;  // Als angle == 0, blijft het de standaardwaarde
 }
 
