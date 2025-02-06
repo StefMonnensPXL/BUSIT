@@ -7,9 +7,9 @@ Servo myservo;  // create servo object to control a servo
 //const int SENSORPIN = 0; // Analog input
 //int pos = 0;    // variable to store the servo position
 //bool isexecuted = false;
-const int min = 23;
+const int min = 33;
 const int standard = 63;
-const int max = 108;
+const int max = 93;
 
 void setup() {
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
@@ -22,12 +22,12 @@ void setup() {
 void loop() {
   if (Serial.available() > 0) {
     int serialInput = Serial.readString().toInt();  // Read one byte of input
-    if(serialInput > max){
-      serialInput = max;
-    }
-    if(serialInput < min){
-      serialInput = min;
-    }
+    //if(serialInput > max){
+    //  serialInput = max;
+    //}
+    //if(serialInput < min){
+    //  serialInput = min;
+    //}
       myservo.write(serialInput);  // Write the value to the servo
   }
 }

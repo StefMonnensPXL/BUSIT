@@ -13,19 +13,20 @@ void Motor::begin() {
 }
 
 int Motor::setSpeed(int speed) {
-    speed = speed * 2;
+    if(speed > 0) speed = speed + 100;
+    if(speed < 0) speed = speed - 100;
     if (speed > _maxSpeed) speed = _maxSpeed;
     if (speed < _minSpeed) speed = _minSpeed;
-    int newDirection = (speed < 0) ? HIGH : LOW;
+    int newDirection = (speed > 0) ? HIGH : LOW;
     if (newDirection != _lastDirection) {
-        delay(500);
         analogWrite(_pwmPin, 0);
-        delay(500);
+        delay(375);
         digitalWrite(_dirPin, newDirection);
+        delay(375);
         _lastDirection = newDirection;
     }
     analogWrite(_pwmPin, abs(speed));
-    return abs(speed);
+    return(abs(speed));
 }
 
 void Motor::update() {

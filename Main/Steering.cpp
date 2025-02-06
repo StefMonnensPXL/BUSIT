@@ -12,7 +12,7 @@ void Steering::begin() {
 }
 
 int Steering::update(int angle) {
-    angle = convertAngle(angle);
+    angle = _standard + angle;
         if (angle > _max) {
             angle = _max;
         }
@@ -23,12 +23,4 @@ int Steering::update(int angle) {
         return(angle);
 }
 
-int Steering::convertAngle(int angle) { 
-    if (angle < 0) {
-        return _standard + angle;
-    } else if (angle > 0) {
-        return _standard + static_cast<int>((static_cast<double>(angle) / 40.0) * (_max - _standard));
-    }
-    return _standard;  // Als angle == 0, blijft het de standaardwaarde
-}
 

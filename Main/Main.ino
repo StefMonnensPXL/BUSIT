@@ -5,9 +5,9 @@
   const int SteeringAnglePin = 9; 
   const int minSpeed = -200;
   const int maxSpeed = 200;
-  const int min = 23;
-  const int standard = 63;
-  const int max = 108;
+  const int min = 44;
+  const int standard = 84;
+  const int max = 124;
   long lastAction;
   Motor motor(dacPin, DIRECTION_PIN, minSpeed, maxSpeed);
   Steering steering(SteeringAnglePin, min, standard, max);
@@ -30,38 +30,36 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (Serial3.available() > 0) {
-    if(millis() - lastAction > 500){
+    
+    if(millis() - lastAction > 1000){
       reset();
     }
     String serialInput = Serial3.readString();
-    
     parseInput(serialInput);
-    
-  }else{
-      reset();
-  }
 }
 void reset(){
-  //motor.setSpeed(0);
-  //steering.update(0);
+  motor.setSpeed(0);
+  steering.update(0);
 }
 
 void parseInput(String input) {
-    // Splits de string op basis van de komma
     int commaIndex = input.indexOf(',');
     while (commaIndex != -1) {
-        String pair = input.substring(0, commaIndex); // Haal het paar voor de komma
-        handlePair(pair); // Verwerk het paar
-        input = input.substring(commaIndex + 1); // Verwijder het verwerkte paar
-        commaIndex = input.indexOf(','); // Zoek de volgende komma
+        String pair = input.substring(0, commaIndex);
+        handlePair(pair);
+        input = input.substring(commaIndex + 1);
+        commaIndex = input.indexOf(',');
     }
-    // Verwerk het laatste paar (of het enige paar als er geen komma's zijn)
-    handlePair(input);
+    if (input.length() > 0) {  // Process the last remaining pair
+        handlePair(input);
+    }
 }
+
 void handlePair(String pair) {
     // Zoek de positie van het '=' teken
     int equalsIndex = pair.indexOf('=');
+    
+    
     if (equalsIndex != -1) {
         String key = pair.substring(0, equalsIndex); // Haal de sleutel (M, S, B)
         String value = pair.substring(equalsIndex + 1); // Haal de waarde
@@ -73,21 +71,13 @@ void handlePair(String pair) {
         if (key == "M") {
             Serial.println(motor.setSpeed(intValue));
             lastAction = millis();
-        } else if (key == "R") {
+        ;} else if (key == "R") {
             steering.update(intValue);
             lastAction = millis();
-        } else if (key == "B") {
-            if(intValue = 1){
-              //motor.setSpeed(0);
-              lastAction = millis();
-              Serial.println(intValue);
-            }
         } else {
             Serial.print("Ongeldige sleutel: ");
             Serial.println(key);
         }
-    } else {
-        Serial.println("Ongeldige invoer. Zorg ervoor dat de waarden in het juiste formaat zijn.");
     }
 }
 
